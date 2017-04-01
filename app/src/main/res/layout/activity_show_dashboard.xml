@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_show_dashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.juqiang_pc.tfsassistant.ShowDashboardActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarShowDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"/>
+
+
+
+    <GridView
+        android:id="@+id/gvDashBoard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarShowDashboard"
+        android:numColumns="2"
+        android:layout_margin="16dp"
+        android:clickable="true" />
+</RelativeLayout>

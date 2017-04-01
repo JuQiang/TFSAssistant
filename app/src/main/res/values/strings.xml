@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TFS助手</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_login">登录</string>
+</resources>
