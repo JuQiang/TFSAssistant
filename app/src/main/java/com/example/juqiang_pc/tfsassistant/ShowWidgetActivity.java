@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.example.juqiang_pc.tfsassistant.API.HttpTask;
 import com.example.juqiang_pc.tfsassistant.API.TaskCompleted;
@@ -74,6 +75,14 @@ public class ShowWidgetActivity extends AppCompatActivity {
 
             final ProgressDialog proDialog = android.app.ProgressDialog.show(ShowWidgetActivity.this, "提示", "正在获取workitems数据……");
             final MyTableView mtv = (MyTableView) findViewById(R.id.mtvWorkItems);
+            mtv.tableLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ////workitem
+                    String url = "http://tfs.teld.cn:8080/tfs/Teld/_apis/wit/workitems/57235?api-version=1.0";
+
+                }
+            });
 
             HttpTask ht = new HttpTask(new TaskCompleted() {
                 @Override

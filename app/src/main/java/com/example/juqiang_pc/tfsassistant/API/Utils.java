@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.juqiang_pc.tfsassistant.Entity.Authentication;
+import com.example.juqiang_pc.tfsassistant.Entity.Field;
 import com.example.juqiang_pc.tfsassistant.Entity.User;
 import com.example.juqiang_pc.tfsassistant.Entity.Widget;
 
@@ -44,7 +45,9 @@ public class Utils {
     public static String projectID = "c955f4f8-3b05-4afc-9969-3a54f7b70533";//orgportal
     public static String teamID = "ad0bf755-9688-4d6a-95f9-4e20702a2972";
     public static String prefixURL = "http://tfs.teld.cn:8080/tfs/Teld/";
+    public static String fieldsURL = "http://tfs.teld.cn:8080/tfs/Teld/_apis/wit/fields";
     public static List<User> userList = new ArrayList<User>();
+    public static List<Field> fieldList = new ArrayList<Field>();
 
     public static int displayWidth;
     public static int displayHeight;
@@ -63,7 +66,7 @@ public class Utils {
 
         HttpURLConnection urlConnection = null;
         Bitmap ret = null;
-        String cachedFilename = GetHash(cacheKey) + ".bitmap";
+        String cachedFilename = getHash(cacheKey) + ".bitmap";
 
         if (needCache) {
             boolean exist = fileExists(cachedFilename);
@@ -129,7 +132,7 @@ public class Utils {
         Log.i(tag, message + "-----" + String.valueOf(System.currentTimeMillis()));
     }
 
-    private static String GetHash(String str) {
+    public static String getHash(String str) {
         byte[] hash;
 
         try {

@@ -17,7 +17,7 @@ import java.util.List;
 public class MyTableView extends ScrollView {
 
 
-    private TableLayout tableLayout; //表格布局
+    public TableLayout tableLayout; //表格布局
     private SplitLineRow splitLineRow;  //水平分割线
 
     //各种参数

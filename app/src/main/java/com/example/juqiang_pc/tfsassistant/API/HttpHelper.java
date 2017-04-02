@@ -101,4 +101,52 @@ public class HttpHelper {
 
         return ret;
     }
+
+    public static String downloadString(String urlString, boolean needCache, String cacheKey) {
+        Utils.WriteLog("!!!DownloadString!!!", urlString);
+        HttpURLConnection urlConnection = null;
+        String ret = "";
+        String cachedFilename = Utils.getHash(cacheKey) + ".string";
+
+        if (needCache) {
+            boolean exist = Utils.fileExists(cachedFilename);
+            if (exist) {
+                byte[] buf = Utils.readExternallStoragePublic(cachedFilename);
+                ret = new String(buf);
+
+                return ret;
+            }
+        }
+
+        try {
+            URL url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+            reader.close();
+            in.close();
+
+            ret = buffer.toString();
+            Utils.writeToExternalStoragePublic(cachedFilename, ret.getBytes());//write to cache
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return ret;
+    }
 }

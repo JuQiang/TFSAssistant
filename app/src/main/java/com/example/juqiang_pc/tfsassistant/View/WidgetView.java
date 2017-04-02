@@ -82,7 +82,7 @@ public class WidgetView extends View {
         ));
 
         canvas.clipRect(0,0,width,height, Region.Op.REPLACE);
-        Rect nameRect = new Rect(0,0,width,height);
+        Rect nameRect = new Rect(0,0,width-32,height);
 
         Paint.FontMetricsInt fontMetrics = penThreshold.getFontMetricsInt();
         // 转载请注明出处：http://blog.csdn.net/hursing

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.juqiang_pc.tfsassistant.API.HttpCacheTask;
 import com.example.juqiang_pc.tfsassistant.API.Utils;
 import com.example.juqiang_pc.tfsassistant.API.HttpTask;
 import com.example.juqiang_pc.tfsassistant.API.TaskCompleted;
@@ -20,6 +21,7 @@ import com.example.juqiang_pc.tfsassistant.Adapter.DashboardAdapter;
 import com.example.juqiang_pc.tfsassistant.Entity.Authentication;
 import com.example.juqiang_pc.tfsassistant.Entity.DashBoard;
 import com.example.juqiang_pc.tfsassistant.Entity.EntityResolver;
+import com.example.juqiang_pc.tfsassistant.Entity.Field;
 import com.example.juqiang_pc.tfsassistant.Entity.User;
 import com.example.juqiang_pc.tfsassistant.View.DashboardView;
 
@@ -66,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        //fetchUserList();
+        fetchUserList();
+        fetchFieldList();
         fetchDashboardList();
     }
 
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchUserList() {
         final ProgressDialog proDialog = android.app.ProgressDialog.show(MainActivity.this, "提示", "正在获取用户列表……");
-        HttpTask ht = new HttpTask(new TaskCompleted() {
+        HttpCacheTask hct = new HttpCacheTask(new TaskCompleted() {
             @Override
             public void OnTaskCompleted(Object result) {
                 try {
@@ -140,7 +143,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ht.execute("http://tfs.teld.cn:8080/tfs/teld/_apis/projects/c955f4f8-3b05-4afc-9969-3a54f7b70533/teams/ad0bf755-9688-4d6a-95f9-4e20702a2972/members?api-version=2.0");
+        hct.execute("http://tfs.teld.cn:8080/tfs/teld/_apis/projects/c955f4f8-3b05-4afc-9969-3a54f7b70533/teams/ad0bf755-9688-4d6a-95f9-4e20702a2972/members?api-version=2.0",
+                "true",
+                "userlist");
+    }
+    private void fetchFieldList() {
+        final ProgressDialog proDialog = android.app.ProgressDialog.show(MainActivity.this, "提示", "正在获取所有字段列表……");
+        HttpCacheTask hct = new HttpCacheTask(new TaskCompleted() {
+            @Override
+            public void OnTaskCompleted(Object result) {
+                try {
+                    JSONArray ja = (new JSONObject(result.toString())).getJSONArray("value");
+                    Utils.fieldList = new ArrayList<Field>();
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject jo = ja.optJSONObject(i);
+                        if(jo.getString("name").startsWith("WEF_"))continue;
+
+                        Field field = new Field();
+                        field.name= jo.getString("name");
+                        field.referenceName = jo.getString("referenceName");
+                        field.type = jo.getString("type");
+
+                        Utils.fieldList.add(field);
+                    }
+                    proDialog.dismiss();
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        hct.execute(Utils.fieldsURL,
+                "true",
+                "fieldList");
     }
 
     @Override
