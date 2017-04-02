@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.example.juqiang_pc.tfsassistant.API.HttpTask;
 import com.example.juqiang_pc.tfsassistant.API.TaskCompleted;
 import com.example.juqiang_pc.tfsassistant.API.Utils;
+import com.example.juqiang_pc.tfsassistant.Entity.Authentication;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
@@ -44,7 +45,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -77,19 +78,25 @@ public class LoginActivity extends AppCompatActivity{
         passView = (EditText) findViewById(R.id.password);
     }
 
-    public void onLoginClicked(View view){
+    public void onLoginClicked(View view) {
 
-        final Intent intentMain = new Intent(this,MainActivity.class);
+        final Intent intentMain = new Intent(this, MainActivity.class);
 
+        Authenticator.setDefault(new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                        userView.getText().toString(),
+                        passView.getText().toString().toCharArray());
+            }
+        });
         HttpTask ht = new HttpTask(new TaskCompleted() {
             @Override
             public void OnTaskCompleted(Object result) {
-String s = result.toString();
-                if(s.length()<1){
+                String s = result.toString();
+                if (s.length() < 1) {
                     Utils.ShowToast("登录的用户名或者密码错误！");
-                }
-                else{
-                    Utils.addAuthentication(userView.getText().toString(),passView.getText().toString());
+                } else {
+                    Utils.addAuthentication(userView.getText().toString(), passView.getText().toString());
                     startActivity(intentMain);
                 }
             }

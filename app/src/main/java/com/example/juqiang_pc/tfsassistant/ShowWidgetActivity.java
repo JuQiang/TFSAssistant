@@ -99,11 +99,20 @@ public class ShowWidgetActivity extends AppCompatActivity {
                                     //"Teld.Scrum.Barrier.Confirmer" -> "朱诗严 <TELD\zhusy>"
                                     if (fieldName.equals("System.AssignedTo") ||
                                             fieldName.equals("Teld.Scrum.Barrier.Confirmer") ||
-                                            fieldName.equals("System.CreatedBy")) {
+                                            fieldName.equals("System.CreatedBy")||
+                                            fieldName.equals("Teld.Scrum.AccidentCharger")
+
+                                            ) {
                                         values.add(getPartName(fullname, "<"));
                                     } else if (fieldName.equals("System.CreatedDate") ||
                                             fieldName.equals("Microsoft.VSTS.Scheduling.DueDate") ||
-                                            fieldName.equals("Teld.Scrum.PlanSubmitDate")
+                                            fieldName.equals("Teld.Scrum.PlanSubmitDate")||
+                                            fieldName.equals("Teld.Release.Date")||
+                                            fieldName.equals("Teld.Publish.Begintime2")||
+                                            fieldName.equals("Teld.Scrum.PlanSubmitDate")||
+                                            fieldName.equals("Teld.Scrum.StartTime")||
+                                            fieldName.equals("Teld.Scrum.SolvedTime")||
+                                            fieldName.equals("Teld.Scrum.AffectTime")
                                             ) {
                                         values.add(getPartName(fullname, "T"));
                                     } else {

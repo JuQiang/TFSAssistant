@@ -50,13 +50,23 @@ public class MainActivity extends AppCompatActivity {
         Utils.displayWidth = displayMetrics.widthPixels;
         Utils.displayHeight = displayMetrics.heightPixels;
 
-        Authentication auth = Utils.getAuthentication();
+        final Authentication auth = Utils.getAuthentication();
         if(auth.user.equals("")) {
             intentLogin = new Intent(this, LoginActivity.class);
             startActivity(intentLogin);
         }
+        else{
+            Authenticator.setDefault(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(
+                            auth.user,
+                            auth.password.toCharArray());
+                }
+            });
 
-        fetchUserList();
+        }
+
+        //fetchUserList();
         fetchDashboardList();
     }
 

@@ -25,16 +25,7 @@ public class HttpHelper {
     public static String getHttpResponse(String urlString){
         HttpURLConnection urlConnection = null;
         String ret = "";
-        final Authentication auth = Utils.getAuthentication();
-        if(auth.user.equals(""))return ret;
 
-        Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                        auth.user,
-                        auth.password.toCharArray());
-            }
-        });
         try {
             URL url = new URL(urlString);
             /*byte[] buf = ("juqiang:Password02!").getBytes();
