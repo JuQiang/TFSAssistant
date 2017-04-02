@@ -50,7 +50,7 @@ public class ShowDashboardActivity extends AppCompatActivity {
         final ProgressDialog proDialog = android.app.ProgressDialog.show(ShowDashboardActivity.this, "提示", "正在获取dashboard数据。由于REST API不支持批量获取widgets，所以会慢，请稍候……");
         List<Widget> widgetList = EntityResolver.resolveWidgetList(dashboardData);
         final List<Widget> newWidgetList = new ArrayList<Widget>();
-        StringBuilder urlList = new StringBuilder();
+
 
         for (int i = 0; i < widgetList.size(); i++) {
             Widget widget = widgetList.get(i);
@@ -58,9 +58,28 @@ public class ShowDashboardActivity extends AppCompatActivity {
             if (widget.type != "query") continue;
 
             newWidgetList.add(widget);
-            urlList.append(widget.detailId).append(";");
+
         }
 
+        int maxrow = getMaxRow(newWidgetList);
+        int maxcol = getMaxCol(newWidgetList);
+
+        final List<Widget> sortedWidgetList = new ArrayList<Widget>();
+        for (int i = 1; i <= maxrow; i++) {
+            for (int j = 1; j <= maxcol; j++) {
+                for (int k = 0; k < newWidgetList.size(); k++) {
+                    Widget w = newWidgetList.get(k);
+                    if (w.row == i && w.column == j) {
+                        sortedWidgetList.add(w);
+                    }
+                }
+            }
+        }
+
+        StringBuilder urlList = new StringBuilder();
+        for(int i=0;i<sortedWidgetList.size();i++){
+            urlList.append(sortedWidgetList.get(i).detailId).append(";");
+        }
         final Context context = this;
         intentShowWidget = new Intent(this, ShowWidgetActivity.class);
 
@@ -77,21 +96,19 @@ String ret = result.toString();
             @Override
             public void OnTaskCompleted(Object result) {
                 List<String> ret = (List<String>) result;
-                for(int i=0;i<newWidgetList.size();i++){
+                for (int i = 0; i < sortedWidgetList.size(); i++) {
                     try {
-                        newWidgetList.get(i).resultCount = (new JSONObject(ret.get(i))).getInt("Count");
-                    }
-                    catch(JSONException ex){
+                        sortedWidgetList.get(i).resultCount = (new JSONObject(ret.get(i))).getInt("Count");
+                    } catch (JSONException ex) {
                         ex.printStackTrace();
-                    }
-                    catch(Exception ex){
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
 
-                gvDashBoard= (GridView)findViewById(R.id.gvDashBoard);
+                gvDashBoard = (GridView) findViewById(R.id.gvDashBoard);
 
-                widgetAdapter = new WidgetAdapter(context,newWidgetList);
+                widgetAdapter = new WidgetAdapter(context, sortedWidgetList);
                 gvDashBoard.setAdapter(widgetAdapter);
                 proDialog.dismiss();
 
@@ -101,8 +118,8 @@ String ret = result.toString();
                         if (view == null) return;
                         final ProgressDialog proDialog2 = android.app.ProgressDialog.show(ShowDashboardActivity.this, "提示", "正在获取widget数据……");
 
-                        final String queryid = ((WidgetView)view).getQueryId();
-                        final String widgetName = ((WidgetView)view).getWidgetName();
+                        final String queryid = ((WidgetView) view).getQueryId();
+                        final String widgetName = ((WidgetView) view).getWidgetName();
                         int a = 0;
                         HttpTask ht = new HttpTask(new TaskCompleted() {
                             @Override
@@ -114,16 +131,37 @@ String ret = result.toString();
                             }
                         });
                         //36760898
-                        ht.execute("http://tfs.teld.cn:8080/tfs/Teld/c955f4f8-3b05-4afc-9969-3a54f7b70533/_apis/wit/wiql/"+queryid);
+                        ht.execute("http://tfs.teld.cn:8080/tfs/Teld/c955f4f8-3b05-4afc-9969-3a54f7b70533/_apis/wit/wiql/" + queryid);
                     }
                 });
-                int size = newWidgetList.size();
                 //newWidgetList.add(widget);
                 //intentShowDashboard.putExtra("dashboardData",String.valueOf(result));
                 //startActivity(intentShowDashboard);
             }
         });
         hbt.execute(urlList.toString());
+    }
+
+    private int getMaxRow(List<Widget> widgets) {
+        int max = widgets.get(0).row;
+        for (int i = 1; i < widgets.size(); i++) {
+            int temp = widgets.get(i).row;
+            if (temp > max) {
+                max = temp;
+            }
+        }
+        return max;
+    }
+
+    private int getMaxCol(List<Widget> widgets) {
+        int max = widgets.get(0).column;
+        for (int i = 1; i < widgets.size(); i++) {
+            int temp = widgets.get(i).column;
+            if (temp > max) {
+                max = temp;
+            }
+        }
+        return max;
     }
 }
 

@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -22,19 +25,13 @@ public class WidgetView extends View {
     private Widget widget;
     private Bitmap headBackgroundBitmap;
     private int width, height, index;
+    private StaticLayout nameLayout;
 
     public WidgetView(Context context, int index, Widget widget) {
         super(context);
 
         this.index = index;
         this.widget = widget;
-
-        penName = new Paint(); //设置一个笔刷大小是3的黄色的画笔
-        penName.setColor(Color.WHITE);
-        penName.setStrokeJoin(Paint.Join.ROUND);
-        penName.setStrokeCap(Paint.Cap.ROUND);
-        penName.setStrokeWidth(3);
-        penName.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
 
         penResult = new Paint(); //设置一个笔刷大小是3的黄色的画笔
         penResult.setColor(Color.WHITE);
@@ -53,6 +50,12 @@ public class WidgetView extends View {
         penThreshold.setTextAlign(Paint.Align.CENTER);
 
         height = width = (Utils.displayWidth-200)/2;
+
+        TextPaint textPaint = new TextPaint();
+
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(48.0F);
+        nameLayout = new StaticLayout(this.widget.name,textPaint,this.width-24, Layout.Alignment.ALIGN_NORMAL,1.0F,0.0F,true);
 
         /*headBackgroundBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.auriel);
         width = headBackgroundBitmap.getWidth();
@@ -84,17 +87,24 @@ public class WidgetView extends View {
         Paint.FontMetricsInt fontMetrics = penThreshold.getFontMetricsInt();
         // 转载请注明出处：http://blog.csdn.net/hursing
         int baseline = (nameRect.bottom + nameRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+
         // 下面这行是实现水平居中，drawText对应改为传入targetRect.centerX()
+
+//从 (20,80)的位置开始绘制
 
 
         if(!isOverThreshold)
         {
             canvas.drawColor(0xff009ccc);
-            canvas.drawText(this.widget.name, 16, 64, penName);
+            canvas.translate(16,16);
+            nameLayout.draw(canvas);
+            //canvas.drawText(this.widget.name, 16, 64, penName);
             canvas.drawText(String.valueOf(widget.resultCount), nameRect.centerX(), baseline, penThreshold);
         } else {
             canvas.drawColor(0xffe51400);
-            canvas.drawText(this.widget.name, 16, 64, penName);
+            canvas.translate(16,16);
+            nameLayout.draw(canvas);
+            //canvas.drawText(this.widget.name, 16, 64, penName);
             canvas.drawText(String.valueOf(widget.resultCount), nameRect.centerX(), baseline, penResult);
         }
     }

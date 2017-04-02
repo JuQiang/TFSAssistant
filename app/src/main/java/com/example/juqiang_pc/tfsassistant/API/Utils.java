@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.juqiang_pc.tfsassistant.Entity.Authentication;
 import com.example.juqiang_pc.tfsassistant.Entity.User;
+import com.example.juqiang_pc.tfsassistant.Entity.Widget;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -363,4 +364,8 @@ public class Utils {
 
         return auth;
     }
+
+
+
+
 }

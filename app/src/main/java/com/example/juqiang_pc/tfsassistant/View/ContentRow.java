@@ -20,7 +20,7 @@ public class ContentRow extends AbstractRow {
 
     private boolean isBackground = false;
 
-    private int textMaxlength = 10;// 如果有文本信息，则文本信息的长度
+    private int textMaxlength = 20;// 如果有文本信息，则文本信息的长度
     private int textColor = Color.BLACK;
     private int textSize = 18; // 文字大小 如果是文本的信息
 
